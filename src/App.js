@@ -1,29 +1,32 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as actions from './actions';
-import Providers from './js/Providers';
 import MovieTile from './components/MovieTile';
-import ProviderTile from './components/ProviderTile';
+import ProvidersContainer from './components/ProvidersContainer';
 
 import './App.css';
 
 class App extends Component {
     componentWillMount() {
-        this.props.fetchTitle('Pulp Fiction');
+        this.props.fetchOmdb('Pulp Fiction');
+        this.props.fetchNetflix('Pulp Fiction');
     }
 
     render() {
         return (
             <div className="App">
-                <MovieTile title={this.props.title} />
-                <ProviderTile provider={Providers.NETFLIX} />
+                <MovieTile omdb={this.props.omdb} />
+                <ProvidersContainer netflix={this.props.netflix} />
             </div>
         );
     };
 }
 
 const mapStateToProps = (state) => {
-    return {title: state.title};
+    return {
+        omdb: state.omdb,
+        netflix: state.netflix
+    };
 };
 
 export default connect(mapStateToProps, actions)(App);

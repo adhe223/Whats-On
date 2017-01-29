@@ -1,8 +1,10 @@
 import { combineReducers } from 'redux';
-import titleReducer from './title.reducer';
+import omdbReducer from './omdb.reducer';
+import netflixReducer from './netflix.reducer';
 
 const rootReducer = combineReducers({
-    title: titleReducer
+    omdb: omdbReducer,
+    netflix: netflixReducer
 });
 
 export default rootReducer;
