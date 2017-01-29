@@ -1,10 +1,10 @@
-const titleReducer = (state = [], action) => {
+const titleReducer = (state = {}, action) => {
     switch(action.type) {
         case 'FETCH_TITLE':
-            return action.payload;
+            return action.payload.data;
+        default:
+            return state;
     }
-
-    return state;
 };
 
 export default titleReducer;

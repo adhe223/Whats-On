@@ -1,21 +1,29 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+import { connect } from 'react-redux';
+import * as actions from './actions';
+import Providers from './js/Providers';
+import MovieTile from './components/MovieTile';
+import ProviderTile from './components/ProviderTile';
+
 import './App.css';
 
 class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h2>Welcome to React</h2>
-        </div>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
-      </div>
-    );
-  }
+    componentWillMount() {
+        this.props.fetchTitle('Pulp Fiction');
+    }
+
+    render() {
+        return (
+            <div className="App">
+                <MovieTile title={this.props.title} />
+                <ProviderTile provider={Providers.NETFLIX} />
+            </div>
+        );
+    };
 }
 
-export default App;
+const mapStateToProps = (state) => {
+    return {title: state.title};
+};
+
+export default connect(mapStateToProps, actions)(App);
