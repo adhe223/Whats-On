@@ -1,35 +1,43 @@
 import axios from 'axios';
 import GuideboxKey from '../js/GuideboxKey';
 
-export const fetchOmdb = (term) => {
-    const omdbRequest = axios.get('https://www.omdbapi.com/?s=' + term);
-
+export const storeName = (movieName) => {
     return {
-        type: 'FETCH_OMDB',
-        payload: omdbRequest
+        type: 'STORE_NAME',
+        payload: movieName
     }
 };
 
-export const fetchNetflix = (term) => {
-    const netflixRequest = axios.get('http://netflixroulette.net/api/api.php?title=' + term);
-
+export const storeSources = (sources) => {
     return {
-        type: 'FETCH_NETFLIX',
-        payload: netflixRequest
+        type: 'STORE_SOURCES',
+        payload: sources
     };
 };
 
-export const fetchGuidebox = (term) => {
+export const storePosterUrl = (posterUrl) => {
+    return {
+        type: 'STORE_POSTER_URL',
+        payload: posterUrl
+    };
+};
+
+export const fetchMovieData = (term) => {
     // http://api-public.guidebox.com/v2/search?api_key=80e15bce905b96de7f0b96b08959ecb8f5f44746&type=movie&query=Pulp%20Fiction
     // http://api-public.guidebox.com/v2/movies/79969?api_key=80e15bce905b96de7f0b96b08959ecb8f5f44746
-    let guideboxMovieRequest;
-    let movieSources;
-
-    const guideboxQueryRequest = axios.get('http://api-public.guidebox.com/v2/search?api_key=' + GuideboxKey + '&type=movie&query=' + term)
+    return (dispatch) => {
+        return axios.get('http://api-public.guidebox.com/v2/search?api_key=' + GuideboxKey + '&type=movie&query=' + term)
             .then((response) => {
                 if (response.data.results && response.data.results.length > 0) {
-                    const movieId = response.data.results[0].id;
+                    const movieData = response.data.results[0];
+                    const movieId = movieData.id;
+                    const movieName = movieData.title;
+                    const posterUrl = movieData.poster_400x570;
+
+                    dispatch(storeName(movieName));
+                    dispatch(storePosterUrl(posterUrl));
                     console.log("Movie ID: " + movieId);
+                    console.log(movieData);
 
                     return axios.get('http://api-public.guidebox.com/v2/movies/' + movieId + '?api_key=' + GuideboxKey);
                 }
@@ -38,15 +46,12 @@ export const fetchGuidebox = (term) => {
             }).then((response) => {
                 if (response) {
                     console.log(response.data.subscription_web_sources);
+                    dispatch(storeSources(response.data.subscription_web_sources));
                 } else {
-                    console.log('Got no movie data back');
+                    throw new Error("No guidebox web sources available!");
                 }
             }).catch((error) => {
                 console.log(error.message);
             });
-
-    return {
-        type: 'FETCH_GUIDEBOX',
-        payload: guideboxQueryRequest
-    };
+    }
 };

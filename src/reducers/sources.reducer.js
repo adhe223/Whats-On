@@ -1,9 +1,9 @@
-const guideboxReducer = (state = {}, action) => {
+const sourcesReducer = (state = {}, action) => {
     switch(action.type) {
-        case 'FETCH_GUIDEBOX':
+        case 'STORE_SOURCES':
             if (action.payload)
             {
-                return action.payload.data;
+                return action.payload;
             } else {
                 return state;
             }
@@ -12,4 +12,4 @@ const guideboxReducer = (state = {}, action) => {
     }
 };
 
-export default guideboxReducer;
+export default sourcesReducer;

@@ -12,7 +12,9 @@ const ProviderTile = (props) => {
                         <h3 className="panel-title">{props.provider.title}</h3>
                     </div>
                     <div className="panel-body">
-                        <img src={props.provider.posterUrl} alt="Presentation" />
+                        <a href={props.sourceUrl}>
+                            <img src={props.provider.posterUrl} alt="Presentation" />
+                        </a>
                     </div>
                 </div>
             </div>

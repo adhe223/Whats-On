@@ -9,40 +9,43 @@ import './App.css';
 
 class App extends Component {
     componentWillMount() {
-        this.props.fetchOmdb('Pulp Fiction');
-        this.props.fetchNetflix('Pulp Fiction');
-        this.props.fetchGuidebox('Pulp Fiction');
+        this.props.fetchMovieData('Pulp Fiction');
     }
 
     render() {
+        let sources = this.props.sources;
+        let posterUrl = this.props.posterUrl;
+
         let hasSources = false;
-        let netflix, amazon, hulu;
+        let netflix, amazon, hulu, providersJSX;
 
-        if (this.props.guidebox.constructor === Array) {
-            hasSources = this.props.guidebox.some(function(source) {
-                if (source.source === Providers.NETFLIX.guideboxKey) {
-                    netflix = source;
-                    return true;
+        if (sources.constructor === Array) {
+            sources.forEach(function(source) {
+                switch(source.source) {
+                    case Providers.NETFLIX.guideboxKey:
+                        netflix = source;
+                        hasSources = true;
+                        break;
+                    case Providers.AMAZON.guideboxKey:
+                        amazon = source;
+                        hasSources = true;
+                        break;
+                    case Providers.HULU.guideboxKey:
+                        hulu = source;
+                        hasSources = true;
+                        break;
                 }
-
-                if (source.source === Providers.AMAZON.guideboxKey) {
-                    amazon = source;
-                    return true;
-                }
-
-                if (source.source === Providers.HULU.guideboxKey) {
-                    hulu = source;
-                    return true;
-                }
-
-                return false;
             });
+        }
+
+        if(hasSources) {
+            providersJSX = <ProvidersContainer netflix={netflix} hulu={hulu} amazon={amazon}/>;
         }
 
         return (
             <div className="App">
-                <MovieTile omdb={this.props.omdb} />
-                <ProvidersContainer netflix={netflix} hulu={hulu} amazon={amazon}/>
+                <MovieTile posterUrl={posterUrl} />
+                {providersJSX}
             </div>
         );
     };
@@ -50,9 +53,9 @@ class App extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        omdb: state.omdb,
-        netflix: state.netflix,
-        guidebox: state.guidebox
+        sources: state.sources,
+        posterUrl: state.posterUrl,
+        name: state.name
     };
 };
 

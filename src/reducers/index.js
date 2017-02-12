@@ -1,12 +1,12 @@
 import { combineReducers } from 'redux';
-import omdbReducer from './omdb.reducer';
-import netflixReducer from './netflix.reducer';
-import guideboxReducer from './guidebox.reducer';
+import sourcesReducer from './sources.reducer';
+import posterUrlReducer from './posterUrl.reducer';
+import nameReducer from './name.reducer';
 
 const rootReducer = combineReducers({
-    omdb: omdbReducer,
-    netflix: netflixReducer,
-    guidebox: guideboxReducer
+    sources: sourcesReducer,
+    posterUrl: posterUrlReducer,
+    name: nameReducer
 });
 
 export default rootReducer;
