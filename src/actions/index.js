@@ -25,17 +25,25 @@ export const fetchGuidebox = (term) => {
     let guideboxMovieRequest;
     let movieSources;
 
-    const guideboxQueryRequest = axios.get('http://api-public.guidebox.com/v2/search?api_key=' + GuideboxKey + '&type=movie&query=' + term).then(function(response) {
-        if (response.data.results && response.data.results.length > 0)
-        {
-            const movieId = response.data.results[0].id;
-            console.log("Movie ID: " + movieId);
-            guideboxMovieRequest = axios.get('http://api-public.guidebox.com/v2/movies/' + movieId + '?api_key=' + GuideboxKey).then(function (response)
-            {
-                console.log(response.data.subscription_web_sources);
+    const guideboxQueryRequest = axios.get('http://api-public.guidebox.com/v2/search?api_key=' + GuideboxKey + '&type=movie&query=' + term)
+            .then((response) => {
+                if (response.data.results && response.data.results.length > 0) {
+                    const movieId = response.data.results[0].id;
+                    console.log("Movie ID: " + movieId);
+
+                    return axios.get('http://api-public.guidebox.com/v2/movies/' + movieId + '?api_key=' + GuideboxKey);
+                }
+
+                throw new Error('Guidebox fetch failed');
+            }).then((response) => {
+                if (response) {
+                    console.log(response.data.subscription_web_sources);
+                } else {
+                    console.log('Got no movie data back');
+                }
+            }).catch((error) => {
+                console.log(error.message);
             });
-        }
-    });
 
     return {
         type: 'FETCH_GUIDEBOX',
