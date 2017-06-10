@@ -37,7 +37,6 @@ class App extends Component {
                 }
             });
         }
-
         if(hasSources) {
             providersJSX = <ProvidersContainer netflix={netflix} hulu={hulu} amazon={amazon}/>;
         }
